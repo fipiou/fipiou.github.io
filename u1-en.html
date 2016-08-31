@@ -260,9 +260,10 @@ var inituploader=function(url){
 
 $(function () {
     'use strict';
-	if(newwindow)startdownloadc();
+	if(newwindow){startdownloadc();
 
 	return;
+	}
 
 		
 	ref.child('upload').on('value', function(snapshot) {
