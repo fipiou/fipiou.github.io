@@ -172,13 +172,13 @@ var fn=null;
 var inituploader=function(){
    //var url ="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_bdd52ad2-a757-460a-ac19-4eb2c13756e8/clipbird/0829/5918e92db95b4f398fca4c941461f07c?temp_url_expires=1473075773&temp_url_sig=f960b93f503d2ed766f5ba3fc3fdf10fda88f66a";
 	notice("-저장된 파일은 사서함주인(이링크를 준 사람)에게 전달됩니다.<br>-파일 업로드가 완료되면 파일함이 닫힙니다.(사서함주인만 볼 수 있습니다.)");
-	 data=null;
-	file=null;
+
 	$('#uploadbtn').show();
     $('#fileupload').fileupload({
       //  url: url,
 		type: 'PUT',
         dataType: 'json',
+		multipart : false,
 		done: function (e, data) {
             
 				
@@ -187,12 +187,13 @@ var inituploader=function(){
 
 				};
 		 var date=new Date();
-		  var time =  Math.floor(date.getTime()/1000) + 60*60*48;
+		  var time =  date.getTime() + 60*60*48*1000;
 				ref.update(
 				{ 'name':file.name ,
 				   'size':file.size,
 				   'type':file.type||"application/unknown",
 				   'fn':fn,
+				 
 				   'time':time
 
 				}, function (e){
@@ -201,7 +202,7 @@ var inituploader=function(){
 						return;}
 
 								$('#uploading').hide();
-							notice("업로드가 완료되었습니다. 사서함 주인은 알림받고 다운로드 받게 됩니다.");
+							notice("업로드가 완료되었습니다.(사서함 주인이 알림을 받고 저장하게 됩니다.)");
 							lambda.invoke({
 							  FunctionName: 'notiupload',
 							  Payload: JSON.stringify({"key":id,"file":file.name}, null, 2) // pass params
@@ -262,8 +263,7 @@ var inituploader=function(){
 
                         data.abort();
 						
-						 data=null;
-						file=null;
+					
 						$('#fileinfo').hide();
 						notice("업로드가 취소 되었습니다. 다시 시도해주세요");
 							$('#uploadbtn').show();
