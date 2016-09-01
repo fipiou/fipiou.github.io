@@ -168,31 +168,47 @@ var	i=0;
 }
 var data=null;
 var file=null;
-var inituploader=function(url){
+var fn=null;
+var inituploader=function(){
    //var url ="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_bdd52ad2-a757-460a-ac19-4eb2c13756e8/clipbird/0829/5918e92db95b4f398fca4c941461f07c?temp_url_expires=1473075773&temp_url_sig=f960b93f503d2ed766f5ba3fc3fdf10fda88f66a";
 	notice("-저장된 파일은 사서함주인(이링크를 준 사람)에게 전달됩니다.<br>-파일 업로드가 완료되면 파일함이 닫힙니다.(사서함주인만 볼 수 있습니다.)");
 	 data=null;
 	file=null;
 	$('#uploadbtn').show();
     $('#fileupload').fileupload({
-        url: url,
+      //  url: url,
 		type: 'PUT',
         dataType: 'json',
 		done: function (e, data) {
             
-				notice("업로드가 완료되었습니다. 사서함 주인에게 자동으로 알려드리니, 보냈다고 알려주실 필요는 없습니다.");
-				closebox=null;
-				$('#uploading').hide();
-
-				ref.child('name').set(file.name);
-
-
-				ref.child('parts').set(1);
 				
-				ref.child('size').set(file.size);
+				closebox=function(){
+				$('#uploading').hide();
+				notice("업로드가 완료되었습니다. 사서함 주인은 알림받고 다운로드 받게 됩니다.");
+				};
+
+				ref.set(
+				{ 'name':file.name ,
+				   'size':file.size,
+				   'type':file.type||"application/unknown",
+				   'fn':fn,
+				   'fn':fn
+
+				}, function(e,d){
+
+				}, function (e){
+					notice("업로드에 문제가 생겼습니다. 새로고침 해주세요.");
+				}
+				);				
+			//	ref.child('name').set(file.name);
+
+			//	ref.child('fn').set(fn);
+			//	ref.child('parts').set(1);
+				
+			//	ref.child('size').set(file.size);
 			
-				ref.child('type').set( file.type||"application/unknown");
-				ref.child('upload').remove();
+			//	ref.child('type').set( file.type||"application/unknown");
+				//ref.child('upload').remove();
 
 							
 			
@@ -229,9 +245,10 @@ var inituploader=function(url){
                       
 
                         data.abort();
-						$('#fileinfo').hide();
+						
 						 data=null;
 						file=null;
+						$('#fileinfo').hide();
 						notice("업로드가 취소 되었습니다. 다시 시도해주세요");
 							$('#uploadbtn').show();
 							$('#uploading').hide();
@@ -241,11 +258,22 @@ var inituploader=function(url){
 
 			lambda.invoke({
 				  FunctionName: 'getBox',
-				  Payload: JSON.stringify({}, null, 2) // pass params
+				  Payload: JSON.stringify({"d":"D"}, null, 2) // pass params
 				}, function(error, d) {
-					
-				var url=$('#fileupload').data.blueimpFileupload.options.url;
-				 data.submit();
+			
+				//alert(d.Payload.url);
+			 var a=	JSON.parse(d.Payload);
+					  if(error==null&& a.url){
+						$('#fileupload').data().blueimpFileupload.options.url=a.url;
+						fn=a.filename;
+						 data.submit();
+					  } else {
+					  
+					  		$('#fileinfo').hide();
+						notice("준비과정에 문제가 발생했습니다. 다시 시도해주세요");
+							$('#uploadbtn').show();
+							$('#uploading').hide();
+					  }
 				});
 
            
@@ -273,15 +301,18 @@ $(function () {
 
 	}
 		
-	ref.child('upload').on('value', function(snapshot) {
-		
-		  if(snapshot.val()){
-			inituploader(snapshot.val());
-		  } else {
-			if(data) data.abort(); 
+	ref.child('fn').on('value', function(snapshot) {
+			var v=		snapshot.val();
+		  if(v){
+			
+			if(v=='-')inituploader();
+			 else {
+			 	if(data) data.abort(); 
 			
 			closebox("업로드가 완료된 사서함입니다. 사서함 주인만 볼 수 있습니다.");
-		  }
+			 }
+		  
+		  } 
 		
 		},function(e){
 			console.log(e);
