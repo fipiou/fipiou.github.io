@@ -235,7 +235,11 @@ var inituploader=function(){
 			
 			setprogressbar(data.loaded / data.total);
             
-        }
+        },
+		start: function(e,data){
+		
+		 if(isIOS||isAndroid) notice("업로드가 완료될때까지 다른작업을 창을 유지해 주세요");	
+		}
 		,
 		add: function (e, data) {
 			var f= data.files[0];
@@ -350,4 +354,4 @@ $(function () {
  
  ga('get', 'pageview');
 
-</script></body><footer class="g--1 no-margin-vertical:"><div style=float:left;margin-left:10px;margin-right:10px;><a href=# onclick=feedback()>Feedback</a></div><div style=float:right;margin-left:10px;margin-right:10px; id=footer_play><a href="https://play.google.com/store/apps/details?id=com.clipbirdapp.app">Fipe</a></div><div style=float:right;margin-left:10px;margin-right:10px;display:none id=footer_admin><a href=# onclick=startdownloadc()>사서함 관리</a></div></footer></html>
+</script></body><footer class="g--1 no-margin-vertical:"><div style=float:left;margin-left:10px;margin-right:10px;><a href=# onclick=feedback()>Feedback</a></div><div style=float:right;margin-left:10px;margin-right:10px; id=footer_play><a href="https://play.google.com/store/apps/details?id=com.clipbirdapp.app">Fipe</a></div><div style=float:right;margin-left:10px;margin-right:10px;display:none id=footer_admin><a href=# onclick=startdownloadc()>사서함 주인용 메뉴</a></div></footer></html>
