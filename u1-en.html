@@ -211,7 +211,9 @@ var inituploader=function(){
 							//alert(d.Payload.url);
 								
 								  if(error!=null){
-												  
+														  
+								  }else {
+									alert("사서함 주인에게 알림을 보내는 과정에서 오류가 발생했습니다. 파일을 저장했다고 직접 알려주세요);
 								  }
 							});
 
@@ -238,7 +240,11 @@ var inituploader=function(){
         },
 		start: function(e,data){
 		
-		 if(isIOS||isAndroid) notice("업로드가 완료될때까지 다른작업을 창을 유지해 주세요");	
+		 if(isIOS||isAndroid) {
+			 notice("업로드가 완료될때까지 창을 유지해 주세요");	
+		 } else {
+			 notice(null);	
+		 }
 		}
 		,
 		add: function (e, data) {
