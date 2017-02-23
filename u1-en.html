@@ -113,14 +113,14 @@ $("#key").html(id);
   firebase.initializeApp(config);
 var ref = firebase.database().ref('d2/' + id);
 
-AWS.config.region = 'ap-northeast-1'; // Region
+AWS.config.region = 'ap-northeast-2'; // Region
 	AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-		IdentityPoolId: 'ap-northeast-1:9fb79308-a977-4e65-bbb6-7775b3803ce5',
+		IdentityPoolId: 'ap-northeast-2:d73540a4-cd6d-472b-ae07-e9fcf2237d3c',
 	});
 
 	var lambda = new AWS.Lambda({
 		maxRetries :2,
-  region: 'ap-northeast-1' //change to your region
+  region: 'ap-northeast-2' //change to your region
 });
 
 
