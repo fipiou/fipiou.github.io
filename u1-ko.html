@@ -184,7 +184,7 @@ var file=null;
 var fn=null;
 var inituploader=function(){
    //var url ="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_bdd52ad2-a757-460a-ac19-4eb2c13756e8/clipbird/0829/5918e92db95b4f398fca4c941461f07c?temp_url_expires=1473075773&temp_url_sig=f960b93f503d2ed766f5ba3fc3fdf10fda88f66a";
-	notice("-저장된 파일은 사서함주인(이링크를 준 사람)에게 전달됩니다.<br>-파일 업로드가 완료되면 파일함이 닫힙니다.(사서함주인만 볼 수 있습니다.)");
+	notice("선택한 파일을 사서함생성자에게 전달합니다.");
 
 	$('#uploadbtn').show();
     $('#fileupload').fileupload({
@@ -201,7 +201,7 @@ var inituploader=function(){
 				};
 		 var date=new Date();
 		  var time =  date.getTime() + 60*60*48*1000;
-				ref.update(
+			if(!bx)ref.update(
 				{ 'name':file.name ,
 				   'size':file.size,
 				   'type':file.type||"application/unknown",
@@ -231,7 +231,34 @@ var inituploader=function(){
 							});
 
 				}
-				);				
+				);	else {
+					
+						
+				ref.child("files").push(
+				{ 'name':file.name ,
+				   'size':file.size,
+				   'type':file.type||"application/unknown",
+				   'fn':fn,
+				 
+				   'time':time
+
+				}, function (e){
+					if(e!=null){
+						notice("업로드에 문제가 생겼습니다. 새로고침 해주세요."); 
+						return;}
+
+								$('#uploading').hide();
+							alert("업로드가 완료되었습니다.다른 파일을 더 전송할 수 있습니다.");
+							inituploader();
+
+			
+
+				}
+				);	
+
+
+
+					}
 			//	ref.child('name').set(file.name);
 
 			//	ref.child('fn').set(fn);
@@ -340,7 +367,9 @@ $(function () {
 
 	}
 		
-	ref.child('fn').on('value', function(snapshot) {
+	
+	
+	if(!bx){ref.child('fn').on('value', function(snapshot) {
 			var v=		snapshot.val();
 		  if(v){
 			
@@ -358,7 +387,34 @@ $(function () {
 			
 			closebox("존재하지 않는 사서함입니다.링크를 주신 분께 다시 요청해주세요.");
 				
+		});}
+		else {
+		
+
+		ref.child('key').on('value', function(snapshot) {
+			var v=		snapshot.val();
+		  if(v){
+			
+			if(v==id)inituploader();
+			 else {
+			 	
+			closebox("존재하지 않는 사서함입니다.링크를 주신 분께 다시 요청해주세요.");
+	
+			 }
+		  
+		  } 
+		
+		},function(e){
+			console.log(e);
+			
+			closebox("존재하지 않는 사서함입니다.링크를 주신 분께 다시 요청해주세요.");
+				
 		});
+		
+		}
+
+			
+		
 
 
 		
