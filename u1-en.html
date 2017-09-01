@@ -82,7 +82,7 @@ transition: width 0.6s ease 0s;
   }
 }
 </style></head><body>
-<!-- trace:u1.html --><header id=header1 class="tile g--2 no-margin-vertical bg--deep-purple color--white">파일사서함 #<span id=key></span></header><table class="g--2 no-margin-vertical card" style=padding-bottom:0px;display:none; id=fileinfo><tr class=table-header><td style=width:110px;>파일이름</td><td width=* style="line-height: 1.5em;"><span id=filename style="font-weight: bold;">Loading..</span></td></tr><tr><td>크기</td><td style="line-height: 1.5em;"><span id=uploaded></span><span id=size></span></td></tr></table><div id=notice class="g--1 card no-margin-vertical bg--clouds" style=margin-bottom:10px><span id=noticetext>사서함 정보를 읽고 있습니다</span></div><div id=uploadbtn class="btn--blue btn btn-success fileinput-button" style="display:none;color:white;width: 100%;padding:20px ;text-align: center;font-size:20pt;">파일선택<input id=fileupload type=file></div><div id=uploading style=display:none;width:100%;padding:5px><div style="vertical-align: middle;width:100%;" id=totalprogress></div><button id=stop class="g--1 btn-raised btn--senconday" style=font-size:20pt;font-family:inherit;>취소</button></div><div id=downloadapp style=display:none class="g--1 tile no-margin-vertical"><div style=font-size:14pt;margin-bottom:7px>Try Fipe.</div>With Fipe, you can send any file easily. Reciver don't have to install to download file.<br><br><a href="https://play.google.com/store/apps/details?id=com.clipbirdapp.app&utm_source=downloadpage&utm_medium=webapp&utm_campaign=downloadapp" onclick="ga('send', 'event','app', 'download');" ;="" style=margin-bottom:7px><img height=16px src=http://ssl.gstatic.com/android/market_images/web/favicon.ico>Install Fipe</a><br><br><a href="https://play.google.com/store/apps/details?id=com.clipbirdapp.app"><img id=screen width=300px src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></a></div><script>
+<!-- trace:u1.html --><header id=header1 class="tile g--2 no-margin-vertical bg--deep-purple color--white">FIPE파일사서함-<span id=key></span></header><table class="g--2 no-margin-vertical card" style=padding-bottom:0px;display:none; id=fileinfo><tr class=table-header><td style=width:110px;>파일이름</td><td width=* style="line-height: 1.5em;"><span id=filename style="font-weight: bold;">Loading..</span></td></tr><tr><td>크기</td><td style="line-height: 1.5em;"><span id=uploaded></span><span id=size></span></td></tr></table><div id=notice class="g--1 card no-margin-vertical bg--clouds" style=margin-bottom:10px><span id=noticetext>사서함 정보를 읽고 있습니다</span></div><div id=uploadbtn class="btn--blue btn btn-success fileinput-button" style="display:none;color:white;width: 100%;padding:20px ;text-align: center;font-size:20pt;">파일선택<input id=fileupload type=file></div><div id=uploading style=display:none;width:100%;padding:5px><div style="vertical-align: middle;width:100%;" id=totalprogress></div><button id=stop class="g--1 btn-raised btn--senconday" style=font-size:20pt;font-family:inherit;>취소</button></div><div id=downloadapp style=display:none class="g--1 tile no-margin-vertical"><div style=font-size:14pt;margin-bottom:7px>Try Fipe.</div>With Fipe, you can send any file easily. Reciver don't have to install to download file.<br><br><a href="https://play.google.com/store/apps/details?id=com.clipbirdapp.app&utm_source=downloadpage&utm_medium=webapp&utm_campaign=downloadapp" onclick="ga('send', 'event','app', 'download');" ;="" style=margin-bottom:7px><img height=16px src=http://ssl.gstatic.com/android/market_images/web/favicon.ico>Install Fipe</a><br><br><a href="https://play.google.com/store/apps/details?id=com.clipbirdapp.app"><img id=screen width=300px src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></a></div><script>
 var _rollbarConfig = {
     accessToken: "642f1a53e9314b2584c51bbc400eccf8",
     captureUncaught: true,
@@ -102,7 +102,7 @@ function formatBytes(e,o){if(0==e)return"0 Byte";var n=1e3,i=o+1||3,r=["Bytes","
 /*jslint unparam: true */
 /*global window, $ */
 var id=QueryString["id"];
-$("#key").html(id);
+
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyAxwXm3pPSMmIdvcmF2EIkrQ71Fbs7hrTo",
@@ -113,7 +113,7 @@ $("#key").html(id);
   firebase.initializeApp(config);
 var bx=id.indexOf("_")>0;
 var ref = firebase.database().ref((bx?'bx/':'d2/') + id);
-
+$("#key").html(id);
 AWS.config.region = 'ap-northeast-2'; // Region
 	AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 		IdentityPoolId: 'ap-northeast-2:081c6e08-242d-4914-a7b8-d120c5be86ca',
@@ -182,9 +182,11 @@ var	i=0;
 var data=null;
 var file=null;
 var fn=null;
+var to=null;
 var inituploader=function(){
    //var url ="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_bdd52ad2-a757-460a-ac19-4eb2c13756e8/clipbird/0829/5918e92db95b4f398fca4c941461f07c?temp_url_expires=1473075773&temp_url_sig=f960b93f503d2ed766f5ba3fc3fdf10fda88f66a";
-	notice("선택한 파일을 사서함생성자에게 전달합니다.");
+	if(to){ notice("선택한 파일을 사서함주인에게 전달합니다.<br>알림:'"+ to +"'");  }else {notice("선택한 파일을 사서함생성자에게 전달합니다.");}
+
 
 	$('#uploadbtn').show();
     $('#fileupload').fileupload({
@@ -391,18 +393,18 @@ $(function () {
 		else {
 		
 
-		ref.child('key').on('value', function(snapshot) {
+		ref.child('to').on('value', function(snapshot) {
 			var v=		snapshot.val();
 		  if(v){
 			
-			if(v==id)inituploader();
-			 else {
+			 to=v;
+			inituploader();
+		  
+		  }  else {
 			 	
 			closebox("존재하지 않는 사서함입니다.링크를 주신 분께 다시 요청해주세요.");
 	
 			 }
-		  
-		  } 
 		
 		},function(e){
 			console.log(e);
