@@ -199,26 +199,26 @@ var inituploader=function(){
 				
 
 				};
-		 var date=new Date();
-		  var time =  date.getTime() + 60*60*48*1000;
-					
-						
-				ref.child("files").push(
-				{ 'name':file.name ,
+		
+				
+				var info={
+				 'name':file.name ,
 				   'size':file.size,
 				   'type':file.type||"application/unknown",
-				   'fn':fn,
-				 
-				   'time':time
-
-				}, function (e){
+					'bid':bid,
+					'uurl':null
+					
+				};
+						
+				ref.update(
+				info, function (e){
 					if(e!=null){
 						notice("업로드에 문제가 생겼습니다. 새로고침 해주세요."); 
 						return;}
 
 								$('#uploading').hide();
-							alert("업로드가 완료되었습니다.다른 파일을 더 전송할 수 있습니다.");
-							inituploader();
+							alert("업로드가 완료되었습니다. 폰의 알림창을 확인해주세요.");
+							//inituploader();
 
 			
 
@@ -327,7 +327,7 @@ $(function () {
 
 			if(v){
 				
-			closebox("업로드가 완료되었습니다. 다른 파일을 보내시려면 폰에서 보내기를 다시 해주세요.");
+			closebox("업로드가 완료되었습니다. 폰에서 알림창을 확인해주세요.");
 			return;
 			}
 
@@ -344,7 +344,15 @@ $(function () {
 				
 		});
 	
-			
+	
+	ref.parent.child("bid").set(bid, function(e){
+			if(e)
+
+			closebox("정보를 찾을 수가 없습니다. 처음 부터 다시 시도해주세요");
+				
+		});
+	
+	
 		
 
 
