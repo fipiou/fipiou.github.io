@@ -398,7 +398,7 @@ var inituploader=function(){
 			renderprogress(1);
 				notice(null);
 			
-			if(f.size>4*1024*1024*1024 ){
+			if(f.size>4*1024*1024*1024 &&false ){
 					notice("파일 사이즈는 4G까지 첨부가능합니다.다른 파일을 선택해주세요.");
 							$('#uploadbtn').show();
 							$('#uploading').hide();
